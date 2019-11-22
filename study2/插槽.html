@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script src="vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<parent>
+			<p slot='s1'>这里是插槽内容1</p>	
+			<p>这里是插槽内容2</p>	
+		</parent>
+	</div>
+	<script type="text/javascript">
+		var child = {
+			template: `
+				<div>我是子组件</div>
+			`,
+			data() {
+				return {
+					msg: '子组件msg'
+				}
+			},
+			created() {
+				//父组件的全部信息
+				console.log(this.$parent)
+			}
+		}
+		var parent = {
+			template: `
+				<div>
+					<h3>我是父组件</h3>
+					<slot name='s1'></slot>
+					<child ref='childs'></child>
+				</div>
+			`,
+			data() {
+				return {
+					msg: '父组件msg'
+				}
+			},
+			components: {
+				child,
+			},
+			mounted() {
+				//console.log(this.$refs.childs)
+			}
+		}
+		new Vue({
+			el: '#app',
+			components: {
+				parent,
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script src="vue.js"></script>
+</head>
+<body>
+	<!-- 笔记
+	 非父子组件之间的通信
+	 1.创建一个空实例(bus中央事件总线也可以叫中央组件)
+	 2.利用$emit $on的触发和监听事件实现父子组件的通信
+	   vue.prototype.$bus=new Vue()//在vue上面挂载一个$bus作为中央处理组件
+	   this.$bus.$emit('自定义事件名','传递参数')//触发自定义事件传递参数
+	   this.$bus.$on('自定义事件名',fn)//监听自定义事件获取数据
+	 解决的方案还有vuex、provice/inject是解决同根往下派发、本地存储也可以进行非父子组件之间的通信
+	 -->
+	<div id="app">
+		<my-header></my-header><hr>
+		<my-body></my-body><hr>
+		<my-footer></my-footer><hr>
+	</div>
+	<script>
+		Vue.prototype.$bus = new Vue()
+		var MyHeader = {
+			template: `
+				<div>我是头部 {{headermsg}}</div>
+			`,
+			data() {
+				return  {
+					headermsg: '我是头部信息'
+				}
+			},
+			created() {
+				var self = this
+				this.$bus.$on('headfn',function(val) {
+					self.headermsg = val
+				})
+			}
+		}
+		var MyBody = {
+			template: `
+				<div>我是身体</div>
+			`
+		}
+		var MyFooter = {
+			template: `
+				<div>我是底部<button @click='sendhead'>想header发送信息</button></div>
+			`,
+			methods: {
+				sendhead: function() {
+					this.$bus.$emit('headfn','我是footer发送过来的信息')
+				}
+			}
+		}
+		new Vue({
+			el: '#app',
+			data() {
+				return {
+					
+				}
+			},
+			components: {
+				MyHeader,
+				MyBody,
+				MyFooter
+			}
+		})
+	</script>
+</body>
+</html>

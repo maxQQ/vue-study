@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script src="vue.js"></script>
+	<script src="vue-router.js"></script>
+</head>
+<body>
+	<div id="app">
+		<!-- 必须用name -->
+		<router-link :to="{name: 'login',query: {id:123,name:'test'}}">去登录</router-link>
+		<router-link :to="{name: 'register',params:{foo:'test2'}}">去注册</router-link><br>
+		<button @click="jslink">点击到登录</button><br>
+		<router-view></router-view>
+	</div>
+	<script>
+		var Login = {
+			template: `
+				<div>
+					<div>我是登录页面</div>
+					<span>获取到的参数：{{querymsg}}</span>
+				</div>
+			`,
+			data() {
+				return {
+					querymsg: ''
+				}
+			},
+			created() {
+				console.log(this.$route.query)
+				this.querymsg = this.$route.query.name
+			}			
+		}
+		var Register = {
+			template: `
+				<div>我是注册页面</div>
+			`,
+			created() {
+				console.log(this.$route.params)
+			}
+		}
+		Vue.use(VueRouter)
+		var router = new VueRouter({
+			routes: [
+				{
+					path: '/login',
+					name: 'login',
+					component: Login
+				},
+				{
+					path: '/register/:foo',
+					name: 'register',
+					component: Register
+				}
+			]
+		})
+		new Vue({
+			el: '#app',
+			router,
+			methods: {
+				jslink() {
+					this.$router.push({
+						path: '/login',
+						query: {
+							testId: 'testid',
+							name: 'linkjs'
+						}
+					})
+				}
+			}
+		})
+	</script>
+</body>
+</html>

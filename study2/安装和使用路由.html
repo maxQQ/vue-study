@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script src="vue.js"></script>
+	<script src="vue-router.js"></script>
+</head>
+<body>
+	<!-- 笔记
+		一、路由是以插件的形式引入到我们的vue项目中来的
+			1.vue-router是vue的核心插件
+				下载 npm i vue-router -s
+				安装插件 Vue.use(VueRouter)
+				创建路由对象 var router = new VueRouter()
+				配置路由规则 router.addRoutes([路由对象])
+				路由对象{path:'锚点值',component:要(填坑)显示的组件}
+				将配置好的路由对象交给vue  在options中传递->key叫做router
+				留坑（使用组件）<router-view></router-view>
+		二、路由的跳转方式：
+			1、通过标签：<router-link to='/login'></router-link>
+			2、通过js控制跳转 this.$router.push({path:'/login'})
+		三、区别：
+			this.$routers.push() 跳转到指定的url，会向history插入新记录
+			点击返回，会跳转到上上一个页面，上一个记录是不存在的
+			this.$router.go(-1)常用来返回，读history里面的记录后退一个
+			
+			v-router中的对象：
+				$route路由信息对象，只读对象
+				$router路由操作对象，只写对象
+	-->
+	<div id="app">
+		<router-link to='/login'>去登录</router-link>
+		<router-link to='/register'>去注册</router-link>
+		<div>
+			<button @click="goreg">我要去注册</button>
+			<button @click="back">返回</button>
+		</div>
+		<router-view></router-view>
+	</div>
+	<script>
+		var Login = {
+			template: `
+				<div>我是登录页面</div>
+			`
+		}
+		var Register = {
+			template: `
+				<div>我是注册页面</div>
+			`
+		}
+		//安装路由插件
+		Vue.use(VueRouter)
+		//创建路由对象
+		var router = new VueRouter({
+			//配置路由对象
+			routes: [
+				{
+					path: '/login',
+					name: 'login',
+					component: Login
+				},
+				{
+					path: '/register',
+					name: 'register',
+					component: Register
+				}
+			]
+		})
+		new Vue({
+			el: '#app',
+			router,
+			methods: {
+				goreg: function() {
+					//this.$router.push({path: '/login'})
+					this.$router.replace({path: '/login'})
+				},
+				back() {
+					this.$router.go(-1)
+				}
+			}
+		})
+	</script>
+</body>
+</html>

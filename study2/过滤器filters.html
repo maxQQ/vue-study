@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script src="vue.js"></script>
+</head>
+	<div id="app">
+		我输入的：<input type="text" v-model="instring"><br>
+		我输出的：{{instring}}<br>
+		过滤后的：{{instring | reversal}}
+	</div>
+	<script type="text/javascript">
+		new Vue({
+			el: '#app',
+			data() {
+				return {
+					instring: ''
+				}
+			},
+			filters: {
+				reversal(val) {
+					return val.split('').reverse().join('')
+				}
+			}
+		})
+	</script>
+<body>
+</body>
+</html>

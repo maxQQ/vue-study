@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script src="vue.js"></script>
+	<script src="vconsole.min.js"></script>
+</head>
+<body>
+	<div id="app">
+		<parent></parent>
+	</div>
+	<script>
+		var vConsole = new VConsole()
+		var Child = {
+			template: `
+				<div>我是子组件--{{sendChild}}--<button @click='sendparent'>反馈内容给父组件</button></div>
+			`,
+			props: ['sendChild'],
+			methods: {
+				sendparent() {
+					//触发方法fn
+					this.$emit('fn','这里是子组件反馈的内容')
+				}
+			}
+		}
+		var Parent = {
+			template: `
+				<div>
+					<span>我是父组件</span>
+					<child sendChild="父组件传过来的" @fn='getfn'></child>
+					<div>{{getinfo}}</div>
+				</div>
+			`,
+			components: {
+				Child
+			},
+			data() {
+				return {
+					getinfo: ''
+				}
+			},
+			methods: {
+				//通过这个方法接收反馈的内容
+				getfn(val) {
+					this.getinfo = val
+				}
+			}
+		}
+		new Vue({
+			el: '#app',
+			components: {
+				Parent
+			}
+		})
+	</script>
+</body>
+</html>

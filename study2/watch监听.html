@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script src="vue.js"></script>
+</head>
+<body>
+	<div id="app">
+		<div>
+			watch监听数据改变：<input type="text" v-model="msg" />
+		</div>
+		<div>
+			深度监听：<input type="text" v-model="msg2.text" />
+		</div>
+		<div>computed计算属性：<br/>
+			<input type="text" v-model="n1">+<input type="text" v-model="n2">*<input type="text" v-model="n3">={{result}}
+		</div>
+	</div>
+	<script type="text/javascript">
+		new Vue({
+			el: '#app',
+			data() {
+				return {
+					msg: '老书记',
+					msg2: {
+						text: ''
+					},
+					n1: '',
+					n2: '',
+					n3: '',
+				}
+			},
+			computed: {
+				result() {
+					return Number(this.n1)+Number(this.n2)*Number(this.n3)
+				}
+			},
+			watch: {
+				msg(newval,oldval) {
+					if(newval=='3') {
+						alert('数据改变成3了')
+					}
+				},
+				msg2: {
+					handler(newval,oldval) {
+						if(newval.text=='3') {
+							alert('深度监听')
+						}
+					},
+					deep: true
+				}
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script src="vue.js"></script>
+</head>
+<body>
+	<!-- 笔记
+		一、单页应用的路由模式有两种
+			哈希模式（利用hashchange事件监听url的hash的改变）
+			history模式（使用此模式需要后台配合把接口都打到我们打包后的index.html上）
+		二、哈希模式原理
+			window.addEventListener('hashchange',function(e) {
+				console.log(e)
+			})
+			核心是锚点值的改变，我们监听到锚点值改变了就去局部改变页面数据，不做跳转。
+			跟传统开发模式url改变后 立刻发起请求，响应整个页面。路由的
+			跳转用户体验更好
+	-->
+	<a href="#/login">登录</a>
+	<a href="#/register">注册</a>
+	<div id="app">
+		
+	</div>
+	<script>
+		var appdiv = document.getElementById('app')
+		window.addEventListener('hashchange',function(e) {
+			console.log(location.hash)
+			switch(location.hash) {
+				case '#/login': 
+					appdiv.innerHTML = '我是登录页面';
+					break;
+				case '#/register': 
+					appdiv.innerHTML = '我是注册页面';
+					break;
+			}	
+		})
+	</script>
+</body>
+</html>
