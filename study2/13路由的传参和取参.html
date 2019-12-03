@@ -8,11 +8,15 @@
 </head>
 <body>
 	<div id="app">
-		<!-- 必须用name -->
-		<router-link :to="{name: 'login',query: {id:123,name:'test'}}">去登录</router-link>
+		<!-- 笔记
+			1.必须用name 
+			2.js跳转路由传参和标签传参，路由相同而参数不同时页面不刷新的问题 
+			  解决方案：<router-view :key="$route.fullPath"></router-view>
+		-->
+		<router-link :to="{name: 'login',query: {id:'123'}}">去登录</router-link>
 		<router-link :to="{name: 'register',params:{foo:'test2'}}">去注册</router-link><br>
 		<button @click="jslink">点击到登录</button><br>
-		<router-view></router-view>
+		<router-view :key="$route.fullPath"></router-view>
 	</div>
 	<script>
 		var Login = {
@@ -29,15 +33,25 @@
 			},
 			created() {
 				console.log(this.$route.query)
-				this.querymsg = this.$route.query.name
+				this.querymsg = this.$route.query.id
 			}			
 		}
 		var Register = {
 			template: `
-				<div>我是注册页面</div>
+				<div>
+					<div>我是注册页面</div>
+					<span>获取到的参数：{{ foo }}</span>
+				</div>
 			`,
+			props: ['foo'],
+			data() {
+				return {
+					msg: ''
+				}
+			},
 			created() {
 				console.log(this.$route.params)
+				this.msg = this.$route.params.foo
 			}
 		}
 		Vue.use(VueRouter)
@@ -51,6 +65,7 @@
 				{
 					path: '/register/:foo',
 					name: 'register',
+					props: true,
 					component: Register
 				}
 			]
@@ -63,8 +78,7 @@
 					this.$router.push({
 						path: '/login',
 						query: {
-							testId: 'testid',
-							name: 'linkjs'
+							id: '456'
 						}
 					})
 				}
