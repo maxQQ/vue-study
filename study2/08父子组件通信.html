@@ -28,7 +28,7 @@
 			template: `
 				<div>
 					<span>我是父组件</span>
-					<child sendChild="父组件传过来的" @fn='getfn'></child>
+					<child :sendChild="msg" @fn='getfn'></child>
 					<div>{{getinfo}}</div>
 				</div>
 			`,
@@ -37,7 +37,8 @@
 			},
 			data() {
 				return {
-					getinfo: ''
+					getinfo: '',
+					msg: '父组件传递的内容'
 				}
 			},
 			methods: {
