@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title></title>
+	<title>03</title>
 	<script src="vue.js"></script>
 </head>
 <body>
@@ -18,20 +18,21 @@
 				</div>
 				<h4>双向数据绑定：</h4>
 				<div>
-					<input type='text' v-model='value1'/><br />
-					<span>{{value1}}</span>
+					<input type='text' v-model='value2'/><br />
+					<span>{{value2}}</span>
 				</div>
 				<button v-on:click="value1='数据改变了'">点击事件1</button>
 				<button @click="change">点击事件2</button>
 			</div>`,
 			data() {
 				return {
-					value1: '单项数据绑定'
+					value1: '单向数据绑定',
+					value2: '双向数据绑定'
 				}
 			},
 			methods: {
 				change: function() {
-					this.value1 = '改变了哦'
+					this.value2 = '改变了哦'
 				}
 			}
 		})

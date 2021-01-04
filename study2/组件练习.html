@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件练习</title>
+    <script src="vue.js"></script>
+    <style>
+        .red {
+            color: red;
+        }
+        .a {
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div :style="{'font-size': fontSize+'em'}">
+            <blog-post 
+                :posts="posts" 
+                author="1孙悟空"
+                @large="fontSize+=$event">
+                <p slot="slot1">slot插入的内容</p>
+            </blog-post>
+        </div>
+        <custom-input v-model="searchText" class="red" data-index="3"></custom-input>
+    </div>
+</body>
+<script>
+    Vue.component('blog-post',{
+        props: ['posts','author'],
+        template: `
+            <div>
+                <h3>{{posts.title}}</h3> 
+                <span>作者：{{author}}</span>
+                <div v-html="posts.content"></div> 
+                <slot name='slot1'></slot>  
+                <button @click="$emit('large',0.1)">调大字体</button>
+            </div>
+        `,
+        methods: {
+            
+        },
+    })
+    Vue.component('custom-input',{
+        props: ['value'],
+        //inheritAttrs: false,
+        template: `
+        <div class='a'>
+            <label>{{value}}</label>
+            <input
+                :value="value"
+                @input="$emit('input', $event.target.value)"
+            />
+        </div>
+        `,
+        created() {
+            console.log(this.$attrs['data-index'])
+        },
+        methods: {
+            
+        }
+    })
+    new Vue({
+        el: '#app',
+        data: {
+            searchText: '默认值',
+            posts: {
+                id: 1,
+                title: '标题',
+                content: '<em>内容...</em>'
+            },
+            fontSize: 1       
+        },
+        methods: {
+            large: function(e) {
+                this.fontSize+=e
+            }
+        },
+    })
+</script>
+</html>

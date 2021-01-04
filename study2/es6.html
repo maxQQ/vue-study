@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>es6练习</title>
+</head>
+<body style="background: rgb(254,212,7);">
+    <canvas id="canvas" width="200" height="200"></canvas>
+    <canvas id="mycanvas" height="300" width="300"></canvas>
+    <script>
+        var a = []
+        for(var i=0;i<10;i++) {
+            a[i] = function() {
+                return function(i) {
+                    console.log('ii',i)
+                }
+            }
+        }
+        a[4]()(4)
+        var fn = function() {
+            this.name='abc',
+            this.age=23
+        }
+        var arr = [1,2,3]
+        var arr1 = new Array(1,1,1)
+        var fn1 = new fn()
+        fn.prototype.a = '111'
+        console.log('==',fn.prototype,fn)
+        console.log(typeof(Array))
+        console.log(a instanceof Array)
+        //函数作为返回值
+        function fn2() {
+            var max = 10
+            return function bar(x) {
+                if(x>max) {
+                    console.log('闭包练习',x)
+                } 
+            }
+        }
+        fn2()(13)
+        //函数作为参数被传递
+        var max = 10;
+        var fn3 = function(x) {
+            if(x>max) {
+                console.log(x)
+            }
+        };
+        (function(f) {
+            var max = 100
+            f(15)
+        })(fn3);
+        console.log('--',+[])
+        let [foo, [[bar], baz]] = [1, [[2], 3]];
+        let [...a1] = [11,2,4,5,56]
+        let [a3=3] = []
+        console.log('a3',a3)
+        console.log('解构赋值',foo,bar,baz,a1)
+        // 获取书籍Id
+        function getBookId() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    console.log('获取书籍Id')
+                    resolve('1001')
+                }, 2000);
+            });
+        }
+
+        // 获取书籍描述
+        function getBookDes() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    console.log('获取书籍描述')
+                    resolve('这是一本好书')
+                }, 1000);
+            });
+        }
+
+        // 上传书籍信息
+        function uploadBookInfo() {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    console.log('上传书籍信息')
+                    resolve('上传成功')
+                }, 1000);
+            });
+        }
+
+        // // promise写法
+        // function uploadWidthPromise(title = '你不知道的JavaScript') {
+        //     this.getBookId(title).then((id) => {
+        //         console.log(id); // 1001
+        //         this.getBookDes(id).then((des) => {
+        //         console.log(des); // 这是一本好书
+        //         this.uploadBookInfo({
+        //             title,
+        //             id,
+        //             des,
+        //         }).then((res) => {
+        //             console.log(res); // 上传成功
+        //         });
+        //         });
+        //     });
+        // }
+
+        // async写法
+        async function uploadWidthAsync(title = '你不知道的JavaScript') {
+            const id = await this.getBookId();
+            const result = await this.uploadBookInfo();
+            const des = await this.getBookDes();
+        }
+        //uploadWidthAsync()
+        (async ()=> {
+            const id = await this.getBookId();
+            const result = await this.uploadBookInfo();
+            const des = await this.getBookDes();
+        })()
+        console.log(Math.fround(2 ** 3))
+    </script>
+</body>
+</html>

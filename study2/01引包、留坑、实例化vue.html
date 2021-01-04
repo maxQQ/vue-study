@@ -1,24 +1,220 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
-	<title></title>
+	<title>01</title>
 	<script src="vue.js"></script>
+	<style>
+		.red {
+			color: red;
+		}
+	</style>
 </head>
+
 <body>
-	<div id="app"></div>
+	<div id="app">
+		<div>我这里是模板内容{{msg}}</div>
+		<span v-bind:title="message">
+			鼠标悬停几秒钟查看此处动态绑定的提示信息！
+		</span>
+		<p v-if="seen">现在看到我了</p>
+		<div>
+			<p v-for="(todo,index) in todos">{{index+1}}.{{todo.text}}</p>
+		</div>
+		<div>
+			<input type="text" v-model="msg">
+		</div>
+		<button v-on:click="reverseMessage">反转msg</button>
+		<ol>
+			<todo-item 
+				:class="{red: isActive}" 
+				v-for="item in groceryList" 
+				v-bind:key="item.id" 
+				v-bind:todo="item">
+			</todo-item>
+		</ol>
+		<blog-post title="My journey with Vue"></blog-post>
+		<p>computed过滤后的数据:{{computedMessage}}</p>
+		<div :class="{red: isActive}">{{fullName}}</div>
+		<dl v-for="(value,name) in testObj">
+			<dt>{{name}}</dt>
+			<dd>{{value}}</dd>
+		</dl>
+		<ul>
+			<li v-for="item in filtertestNumber">{{item}}</li>
+		</ul>
+		<ul>
+			<template v-for="set in sets">
+				<li v-for="n in even(set)">{{n}}</li>
+			</template>
+		</ul>
+		<div id="todo-list-example">
+			<form v-on:submit.prevent="addNewTodo">
+				<label for="new-todo">Add a todo</label>
+				<input v-model="newTodoText" id="new-todo" placeholder="E.g. Feed the cat">
+				<button>Add</button>
+			</form>
+			<ul>
+				<template v-for="(todo,index) in newTodos">
+					<li 
+						is="new-todo" 					
+						v-bind:key="todo.id" 
+						v-bind:title="todo.title"
+						v-on:remove="newTodos.splice(index,1)"
+					></li>
+				</template>				
+			</ul>
+		</div>
+		<div class="input_box">
+			<input type="checkbox" id="checked" v-model="checked">
+			<label for="checked">{{checked}}</label>
+		</div>
+		{{inputVal}}<br>
+		<input type="text" v-model="inputVal" placeholder="请输入...">
+		<div>
+			<input type="checkbox" id="jack1" value="Jack" v-model="checkedNames">
+			<label for="jack">Jack</label>
+			<input type="checkbox" id="john2" value="John" v-model="checkedNames">
+			<label for="john">John</label>
+			<input type="checkbox" id="mike3" value="Mike" v-model="checkedNames">
+			<label for="mike">Mike</label>
+			<br>
+			<span>Checked names: {{ checkedNames }}</span>
+		</div>
+		<button-center></button-center> <button-center></button-center> <button-center></button-center>
+	</div>
 	<script>
-		new Vue({
-			el: "#app",
-			template:`,
-				<div>我这里是模板内容{{msg}}</div>
-			`,
-			data() {
+		Vue.component('todo-item', {
+			props: ['todo'],
+			template: `<li>{{todo.text}}</li>`
+		})
+		Vue.component('new-todo', {
+			props: ['title'],
+			template: `
+				<li>
+					{{title}}
+					<button v-on:click="$emit('remove')">Remove</button>
+				</li>
+			`
+		})
+		Vue.component('button-center',{
+			data: function() {
 				return {
-					msg: 'Hello Vue!'
+					count: 0
 				}
-			}
+			},
+			template: `
+				<button @click="count++">You clicked Me {{count}} times.</button>
+			`
+		})
+		Vue.component('blog-post',{
+			props: ['title'],
+			template: '<h3>{{ title }}</h3>'
+		})
+		var app = new Vue({
+			el: "#app",
+			data: {
+				inputVal: 'test',
+				checkedNames: [],
+				checked: false,
+				isActive: true,
+				msg: 'Hello Vue!',
+				message: '页面加载于 ' + new Date().toLocaleString(),
+				seen: true,
+				todos: [{
+						text: '学习 JavaScript'
+					},
+					{
+						text: '学习 Vue'
+					},
+					{
+						text: '整个牛项目'
+					}
+				],
+				groceryList: [
+					{
+						id: 0,
+						text: '蔬菜',
+					},
+					{
+						id: 1,
+						text: '奶酪',
+					},
+					{
+						id: 2,
+						text: '随便其它什么人吃的东西',
+					}
+				],
+				firstName: 'Foo',
+				lastName: 'Bar',
+				testObj: {
+					name: '猪八戒',
+					wuqi: '九齿钉耙'
+				},
+				testNumber: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+				sets: [
+					[1, 2, 3, 4, 5],
+					[6, 7, 8, 9, 10]
+				],
+				//fullName: 'Foo Bar11',
+				newTodos: [{
+						id: 1,
+						title: 'Do the dishes',
+					},
+					{
+						id: 2,
+						title: 'Take out the trash',
+					},
+					{
+						id: 3,
+						title: 'Mow the lawn'
+					}
+				],
+				nextTodoId: 4,
+				newTodoText: ''
+			},
+			watch: {
+				firstName: function (val) {
+					this.fullName = val + ' ' + this.lastName
+				},
+				lastName: function (val) {
+					this.fullName = this.firstName + ' ' + val
+				}
+			},
+			computed: {
+				filtertestNumber: function () {
+					return this.testNumber.filter(function (e) {
+						return e % 2 === 0
+					})
+				},
+				computedMessage: function () {
+					return this.msg + '过滤了'
+				},
+				fullName: function () {
+					return this.firstName + ' ' + this.lastName
+				}
+			},
+			methods: {
+				even: function (number) {
+					return number.filter(function (e) {
+						return e % 2 === 0
+					})
+				},
+				reverseMessage: function () {
+					this.msg = this.msg.split('').reverse().join('')
+				},
+				addNewTodo: function () {
+					this.newTodos.push({
+						id: this.nextTodoId++,
+						title: this.newTodoText
+					})
+					this.newTodoText = ''
+					console.log(this.newTodos)
+				}
+			},
 		})
 	</script>
 </body>
+
 </html>
